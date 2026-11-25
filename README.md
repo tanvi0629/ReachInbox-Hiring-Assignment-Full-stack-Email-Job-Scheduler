@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ReachInbox — Full-Stack Email Job Scheduler
 
 A production-grade email scheduler service with a React dashboard. Built for the ReachInbox hiring assignment.
@@ -303,3 +304,6 @@ reachinbox-scheduler/
     ├── .env.local.example
     └── package.json
 ```
+=======
+# ReachInbox-Hiring-Assignment-Full-stack-Email-Job-Scheduler
+>>>>>>> 85b6456b5b8eb3b6931927a072604f42a6257f83
