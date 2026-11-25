@@ -127,18 +127,28 @@ async function sendViaBrevo(opts: SendEmailOptions, apiKey: string): Promise<{ m
     payload.replyTo = { email: opts.senderEmail, name: opts.senderName };
   }
 
-  const res = await axios.post('https://api.brevo.com/v3/smtp/email', payload, {
-    headers: {
-      'api-key': apiKey,
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    timeout: 15000,
-  });
+  try {
+    const res = await axios.post('https://api.brevo.com/v3/smtp/email', payload, {
+      headers: {
+        'api-key': apiKey,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      timeout: 15000,
+    });
 
-  const messageId = res.data?.messageId || `brevo-${opts.emailId}`;
-  console.log(`📧 Email sent via Brevo HTTPS API to ${opts.recipientEmail}: ${messageId}`);
-  return { messageId, previewUrl: '' };
+    const messageId = res.data?.messageId || `brevo-${opts.emailId}`;
+    console.log(`📧 Email sent via Brevo HTTPS API to ${opts.recipientEmail}: ${messageId}`);
+    return { messageId, previewUrl: '' };
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      const detail = typeof err.response.data === 'object'
+        ? JSON.stringify(err.response.data)
+        : String(err.response.data);
+      throw new Error(`Brevo API ${err.response.status}: ${detail}`);
+    }
+    throw err;
+  }
 }
 
 export async function sendEmail(opts: SendEmailOptions): Promise<{ messageId: string; previewUrl: string }> {
